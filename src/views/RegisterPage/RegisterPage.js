@@ -44,7 +44,7 @@ export default function RegisterPage(props) {
           "password": password,
           "email": email
       }
-    axios.post("http://newsletter-plus.herokuapp.com/auth/register", data).then(response => {
+    axios.post("https://newsletter-plus.herokuapp.com/auth/register", data).then(response => {
       localStorage["token"] = response.data.token;
       localStorage["user"] = response.data.user.username;
       window.location.replace("/");
