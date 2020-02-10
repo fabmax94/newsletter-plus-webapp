@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 // @material-ui/icons
 
@@ -29,7 +29,7 @@ const useStyles = makeStyles(styles);
 export default function HomePage(props) {
     const classes = useStyles();
     const [lastNews, setLastNews] = useState([]);
-    const {...rest} = props;
+    const { ...rest } = props;
 
     const loadNews = (typeNews) => {
         switch (typeNews) {
@@ -54,7 +54,7 @@ export default function HomePage(props) {
                 color="transparent"
                 routes={dashboardRoutes}
                 brand="Newsletter Plus"
-                rightLinks={<HeaderLinks/>}
+                rightLinks={<HeaderLinks portals={["Medium"]} />}
                 fixed
                 changeColorOnScroll={{
                     height: 400,
@@ -68,10 +68,8 @@ export default function HomePage(props) {
                         <GridItem xs={12} sm={12} md={6}>
                             <h1 className={classes.title}>Notícias de tecnologia</h1>
                             <h4>
-                                Every landing page needs a small description after the big bold
-                                title, that{"'"}s why we added this text here. Add here all the
-                                information that can make you or your product create the first
-                                impression.
+                                Um portal que une todos os seus sites de notícia favoritos
+                                em uma única plataforma, totalmente gratuita e open source.
                             </h4>
                         </GridItem>
                     </GridContainer>
@@ -79,10 +77,15 @@ export default function HomePage(props) {
             </Parallax>
             <div className={classNames(classes.main, classes.mainRaised)}>
                 <div className={classes.container}>
-                    <NewsLandingSection section={"Medium"} items={lastNews} onHandleShowNews={showNews}/>
+                    {lastNews.length ? (
+                        <NewsLandingSection section={"Medium"} items={lastNews} onHandleShowNews={showNews} />
+                    ) : (
+                            <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt", color: "black", marginLeft: "45%", marginTop: "15px", marginBottom: "15px" }}></i>
+                        )}
+
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </div>
     );
 }

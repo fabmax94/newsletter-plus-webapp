@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 // @material-ui/icons
 
@@ -18,9 +18,6 @@ import Parallax from "components/Parallax/Parallax.js";
 
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
-// Sections for this page
-import NewsLandingSection from "./Sections/NewsLandingSection.js";
-
 
 const dashboardRoutes = [];
 
@@ -29,8 +26,8 @@ const useStyles = makeStyles(styles);
 export default function NewsPage(props) {
     const classes = useStyles();
     const [news, setNews] = useState({});
-    const {...rest} = props;
-    const {id} = props.match.params;
+    const { ...rest } = props;
+    const { id } = props.match.params;
 
 
     useEffect(() => {
@@ -46,7 +43,7 @@ export default function NewsPage(props) {
                 color="transparent"
                 routes={dashboardRoutes}
                 brand="Newsletter Plus"
-                rightLinks={<HeaderLinks/>}
+                rightLinks={<HeaderLinks portals={["Medium"]} />}
                 fixed
                 changeColorOnScroll={{
                     height: 400,
@@ -54,27 +51,21 @@ export default function NewsPage(props) {
                 }}
                 {...rest}
             />
-            <Parallax filter image={require("assets/img/landing-bg.jpg")}>
+            <Parallax filter image={require("assets/img/landing-bg.jpg")} style={{ "height": "360px" }}>
                 <div className={classes.container}>
                     <GridContainer>
                         <GridItem xs={12} sm={12} md={6}>
                             <h1 className={classes.title}>Notícias de tecnologia</h1>
-                            <h4>
-                                Every landing page needs a small description after the big bold
-                                title, that{"'"}s why we added this text here. Add here all the
-                                information that can make you or your product create the first
-                                impression.
-                            </h4>
                         </GridItem>
                     </GridContainer>
                 </div>
             </Parallax>
             <div className={classNames(classes.main, classes.mainRaised)}>
-                <div className={classes.container} id={"news-container"} style={{paddingTop: "20px", paddingBottom: "20px"}}>
-
+                <div className={classes.container} id={"news-container"} style={{ paddingTop: "20px", paddingBottom: "20px" }}>
+                    <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt" , color: "black", marginLeft: "45%"}}></i>
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </div>
     );
 }
