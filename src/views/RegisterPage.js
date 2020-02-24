@@ -23,7 +23,7 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
 import image from "assets/img/bg7.jpg";
 
-import axios from 'axios'; 
+import axios from 'axios';
 import { Report } from "@material-ui/icons";
 
 const useStyles = makeStyles(styles);
@@ -33,17 +33,17 @@ export default function RegisterPage(props) {
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  setTimeout(function() {
+  setTimeout(function () {
     setCardAnimation("");
   }, 700);
   const classes = useStyles();
   const { ...rest } = props;
   const onRegister = () => {
-      let data = {
-          "username": username,
-          "password": password,
-          "email": email
-      }
+    let data = {
+      "username": username,
+      "password": password,
+      "email": email
+    }
     axios.post("https://newsletter-plus.herokuapp.com/auth/register", data).then(response => {
       localStorage["token"] = response.data.token;
       localStorage["user"] = response.data.user.username;
@@ -84,7 +84,7 @@ export default function RegisterPage(props) {
                       }}
                       inputProps={{
                         type: "text",
-                        onChange: event => {setUsername(event.target.value)},
+                        onChange: event => { setUsername(event.target.value) },
                         endAdornment: (
                           <InputAdornment position="end">
                             <People className={classes.inputIconsColor} />
@@ -100,7 +100,7 @@ export default function RegisterPage(props) {
                       }}
                       inputProps={{
                         type: "email",
-                        onChange: event => {setEmail(event.target.value)},
+                        onChange: event => { setEmail(event.target.value) },
                         endAdornment: (
                           <InputAdornment position="end">
                             <Email className={classes.inputIconsColor} />
@@ -116,7 +116,7 @@ export default function RegisterPage(props) {
                       }}
                       inputProps={{
                         type: "password",
-                        onChange: event => {setPassword(event.target.value)},
+                        onChange: event => { setPassword(event.target.value) },
                         endAdornment: (
                           <InputAdornment position="end">
                             <Icon className={classes.inputIconsColor}>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -18,23 +17,40 @@ import Parallax from "components/Parallax/Parallax.js";
 
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
+// Sections for this page
+import NewsSection from "../sections/NewsSection";
+
 
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
-export default function NewsPage(props) {
+export default function HomePage(props) {
     const classes = useStyles();
-    const [news, setNews] = useState({});
+    const [lastNews, setLastNews] = useState([]);
     const { ...rest } = props;
-    const { id } = props.match.params;
+
+    const loadNews = (typeNews) => {
+        switch (typeNews) {
+            case 'medium':
+                axios.get('https://newsletter-plus.herokuapp.com/api/news/last?portal=medium').then((response => setLastNews(response.data)));
+                break;
+            default:
+                break;
+        }
+    };
+
+    const showNews = (id) => {
+        if (!localStorage["token"]) {
+            props.history.push(`/login`);
+        } else {
+            props.history.push(`/news/${id}`);
+        }
+    };
 
 
     useEffect(() => {
-        axios.get(`https://newsletter-plus.herokuapp.com/api/news/get?id=${id}`).then((response => {
-            document.getElementById("news-container").innerHTML = response.data[0].content;
-        }));
-
+        loadNews('medium');
     }, []);
 
     return (
@@ -51,18 +67,27 @@ export default function NewsPage(props) {
                 }}
                 {...rest}
             />
-            <Parallax filter image={require("assets/img/landing-bg.jpg")} style={{ "height": "360px" }}>
+            <Parallax filter image={require("assets/img/landing-bg.jpg")}>
                 <div className={classes.container}>
                     <GridContainer>
                         <GridItem xs={12} sm={12} md={6}>
                             <h1 className={classes.title}>Notícias de tecnologia</h1>
+                            <h4>
+                                Um portal que une todos os seus sites de notícia favoritos
+                                em uma única plataforma, totalmente gratuita e open source.
+                            </h4>
                         </GridItem>
                     </GridContainer>
                 </div>
             </Parallax>
             <div className={classNames(classes.main, classes.mainRaised)}>
-                <div className={classes.container} id={"news-container"} style={{ paddingTop: "20px", paddingBottom: "20px" }}>
-                    <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt" , color: "black", marginLeft: "45%"}}></i>
+                <div className={classes.container}>
+                    {lastNews.length ? (
+                        <NewsSection section={"Medium"} items={lastNews} onHandleShowNews={showNews} />
+                    ) : (
+                            <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt", color: "black", marginLeft: "45%", marginTop: "40px", marginBottom: "40px" }}></i>
+                        )}
+
                 </div>
             </div>
             <Footer />

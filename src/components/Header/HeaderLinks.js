@@ -9,10 +9,9 @@ import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import Tooltip from "@material-ui/core/Tooltip";
 
 // @material-ui/icons
-import { Apps, ListAlt, CloudDownload, Person } from "@material-ui/icons";
+import { Star, ListAlt, Person } from "@material-ui/icons";
 
 // core components
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.js";
@@ -48,6 +47,17 @@ export default function HeaderLinks(props) {
           )}
         />
       </ListItem>
+      {username ? (
+        <ListItem className={classes.listItem}>
+          <Button
+            href="/bookmark"
+            color="transparent"
+            className={classes.navLink}
+          >
+            <Star className={classes.icons} /> Favoritos
+        </Button>
+        </ListItem>
+      ) : null}
       <ListItem className={classes.listItem}>
         {username ? (
           <CustomDropdown

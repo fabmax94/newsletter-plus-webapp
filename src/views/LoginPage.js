@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
-import Email from "@material-ui/icons/Email";
 import People from "@material-ui/icons/People";
 // core components
 import Header from "components/Header/Header.js";
@@ -23,7 +22,7 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
 import image from "assets/img/bg7.jpg";
 
-import axios from 'axios'; 
+import axios from 'axios';
 import { Report } from "@material-ui/icons";
 
 const useStyles = makeStyles(styles);
@@ -31,23 +30,27 @@ const useStyles = makeStyles(styles);
 export default function RegisterPage(props) {
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
   const [username, setUsername] = React.useState("");
-  const [email, setEmail] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
   const [password, setPassword] = React.useState("");
-  setTimeout(function() {
+  setTimeout(function () {
     setCardAnimation("");
   }, 700);
   const classes = useStyles();
   const { ...rest } = props;
   const onLogin = () => {
-      let data = {
-          "username": username,
-          "password": password
-      }
+    setIsLoading(true);
+    let data = {
+      "username": username,
+      "password": password
+    }
     axios.post("https://newsletter-plus.herokuapp.com/auth/login", data).then(response => {
       localStorage["token"] = response.data.token;
       localStorage["user"] = response.data.user.username;
       window.location.replace("/");
-    }).catch(error => alert(error.response.data.username));
+    }).catch(error => {
+      setIsLoading(false);
+      alert(error.response.data.username);
+    });
   };
 
   return (
@@ -83,7 +86,7 @@ export default function RegisterPage(props) {
                       }}
                       inputProps={{
                         type: "text",
-                        onChange: event => {setUsername(event.target.value)},
+                        onChange: event => { setUsername(event.target.value) },
                         endAdornment: (
                           <InputAdornment position="end">
                             <People className={classes.inputIconsColor} />
@@ -99,7 +102,7 @@ export default function RegisterPage(props) {
                       }}
                       inputProps={{
                         type: "password",
-                        onChange: event => {setPassword(event.target.value)},
+                        onChange: event => { setPassword(event.target.value) },
                         endAdornment: (
                           <InputAdornment position="end">
                             <Icon className={classes.inputIconsColor}>
@@ -113,6 +116,9 @@ export default function RegisterPage(props) {
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
                     <Button simple color="primary" size="lg" onClick={onLogin}>
+                      {isLoading ? (
+                        <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ marginRight: "5px" }}></i>
+                      ) : null}
                       LogIn
                     </Button>
                   </CardFooter>

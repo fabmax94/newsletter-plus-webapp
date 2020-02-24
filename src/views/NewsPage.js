@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
+
+import { Star } from "@material-ui/icons";
 // @material-ui/icons
 
 // core components
@@ -14,39 +17,47 @@ import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
 import Parallax from "components/Parallax/Parallax.js";
+import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
-// Sections for this page
-import NewsLandingSection from "./Sections/NewsLandingSection.js";
-
-;
 
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
-export default function HomePage(props) {
+export default function NewsPage(props) {
     const classes = useStyles();
-    const [lastNews, setLastNews] = useState([]);
     const { ...rest } = props;
+    const { id } = props.match.params;
 
-    const loadNews = (typeNews) => {
-        switch (typeNews) {
-            case 'medium':
-                axios.get('https://newsletter-plus.herokuapp.com/api/news/last?portal=medium').then((response => setLastNews(response.data)));
-                break;
-            default:
-                break;
-        }
-    };
 
-    const showNews = (id) => {
-        props.history.push(`/news/${id}`);
-    };
     useEffect(() => {
-        loadNews('medium');
+        if (!localStorage["token"]) {
+            props.history.push(`/login`);
+            return;
+        }
+        axios.get(`https://newsletter-plus.herokuapp.com/api/news/get?id=${id}`).then((response => {
+            document.getElementById("news-container").innerHTML = response.data[0].content;
+        }));
+
     }, []);
+
+    const onMarkBookmark = () => {
+        let headers = {
+            Authorization: `Token ${localStorage['token']}`
+        };
+
+        let data = {
+            news_id: parseInt(id)
+        };
+
+        axios.post(`https://newsletter-plus.herokuapp.com/api/bookmark/save/`, data, {
+            headers: headers
+        }).then((response => {
+
+        }));
+    };
 
     return (
         <div>
@@ -62,27 +73,19 @@ export default function HomePage(props) {
                 }}
                 {...rest}
             />
-            <Parallax filter image={require("assets/img/landing-bg.jpg")}>
+            <Parallax filter image={require("assets/img/landing-bg.jpg")} style={{ "height": "300px" }}>
                 <div className={classes.container}>
                     <GridContainer>
                         <GridItem xs={12} sm={12} md={6}>
-                            <h1 className={classes.title}>Notícias de tecnologia</h1>
-                            <h4>
-                                Um portal que une todos os seus sites de notícia favoritos
-                                em uma única plataforma, totalmente gratuita e open source.
-                            </h4>
+                            <h1 className={classes.title}>Medium</h1>
                         </GridItem>
                     </GridContainer>
                 </div>
             </Parallax>
             <div className={classNames(classes.main, classes.mainRaised)}>
-                <div className={classes.container}>
-                    {lastNews.length ? (
-                        <NewsLandingSection section={"Medium"} items={lastNews} onHandleShowNews={showNews} />
-                    ) : (
-                            <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt", color: "black", marginLeft: "45%", marginTop: "15px", marginBottom: "15px" }}></i>
-                        )}
-
+                <Button onClick={onMarkBookmark} justIcon color="transparent" style={{ float: "right" }}><Star /></Button>
+                <div className={classes.container} id={"news-container"} style={{ paddingTop: "20px", paddingBottom: "20px" }}>
+                    <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt", color: "black", marginLeft: "45%" }}></i>
                 </div>
             </div>
             <Footer />
