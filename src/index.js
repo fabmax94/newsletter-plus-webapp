@@ -12,17 +12,21 @@ import LoginPage from "views/LoginPage.js";
 import RegisterPage from "views/RegisterPage.js";
 import BookmarkPage from "views/BookmarkPage.js";
 
+import {ContextProvider} from "context.js";
+
 let hist = createBrowserHistory();
 
 ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      <Route path="/news/:id" component={NewsPage} />
-      <Route path="/bookmark" component={BookmarkPage} />
-      <Route path="/login" component={LoginPage} />
-      <Route path="/register" component={RegisterPage} />
-      <Route path="/" component={HomePage} />
-    </Switch>
-  </Router>,
+  <ContextProvider>
+    <Router history={hist}>
+      <Switch>
+        <Route path="/news/:id" component={NewsPage} />
+        <Route path="/bookmark" component={BookmarkPage} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/register" component={RegisterPage} />
+        <Route path="/" component={HomePage} />
+      </Switch>
+    </Router>
+  </ContextProvider>,
   document.getElementById("root")
 );

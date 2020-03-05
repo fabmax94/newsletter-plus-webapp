@@ -19,16 +19,15 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js";
 
+import { Context } from 'context.js';
+
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinks(props) {
   const classes = useStyles();
-  const username = localStorage["user"];
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("id");
-    localStorage.removeItem("user");
-  };
+
+  const { username, logout } = React.useContext(Context);
+
   return (
     <List className={classes.list}>
       <ListItem className={classes.listItem}>

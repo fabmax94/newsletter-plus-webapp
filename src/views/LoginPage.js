@@ -23,7 +23,8 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 import image from "assets/img/bg7.jpg";
 
 import axios from 'axios';
-import { Report } from "@material-ui/icons";
+
+import {Context} from 'context.js';
 
 const useStyles = makeStyles(styles);
 
@@ -42,10 +43,12 @@ export default function RegisterPage(props) {
     let data = {
       "username": username,
       "password": password
-    }
+    };
+
+    const { login } = React.useContext(Context);
+
     axios.post("https://newsletter-plus.herokuapp.com/auth/login", data).then(response => {
-      localStorage["token"] = response.data.token;
-      localStorage["user"] = response.data.user.username;
+      login(response.data.username, response.date.token);
       window.location.replace("/");
     }).catch(error => {
       setIsLoading(false);
