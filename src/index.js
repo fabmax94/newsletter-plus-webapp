@@ -12,7 +12,7 @@ import LoginPage from "views/LoginPage.js";
 import RegisterPage from "views/RegisterPage.js";
 import BookmarkPage from "views/BookmarkPage.js";
 
-import {ContextProvider} from "context.js";
+import { ContextProvider } from "./context";
 
 let hist = createBrowserHistory();
 

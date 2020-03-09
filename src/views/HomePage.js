@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import axios from 'axios';
 // nodejs library that concatenates classes
 import classNames from "classnames";
@@ -21,24 +21,19 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 import NewsSection from "../sections/NewsSection";
 
 
+import { Context } from "../context";
+
+
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
-export default function HomePage(props) {
+const HomePage = (props) => {
     const classes = useStyles();
-    const [lastNews, setLastNews] = useState([]);
+    const [news, setNews] = useState({});
+    const [isLoading, setIsLoading] = React.useState(true);
+    const { portals } = React.useContext(Context);
     const { ...rest } = props;
-
-    const loadNews = (typeNews) => {
-        switch (typeNews) {
-            case 'medium':
-                axios.get('https://newsletter-plus.herokuapp.com/api/news/last?portal=medium').then((response => setLastNews(response.data)));
-                break;
-            default:
-                break;
-        }
-    };
 
     const showNews = (id) => {
         if (!localStorage["token"]) {
@@ -50,7 +45,12 @@ export default function HomePage(props) {
 
 
     useEffect(() => {
-        loadNews('medium');
+        portals.forEach(portal => {
+            axios.get(`https://newsletter-plus.herokuapp.com/api/news?portal=${portal}&last`, response => {
+                setNews({ ...news, portal: response.data });
+                setIsLoading(false);
+            });
+        });
     }, []);
 
     return (
@@ -82,8 +82,9 @@ export default function HomePage(props) {
             </Parallax>
             <div className={classNames(classes.main, classes.mainRaised)}>
                 <div className={classes.container}>
-                    {lastNews.length ? (
-                        <NewsSection section={"Medium"} items={lastNews} onHandleShowNews={showNews} />
+                    {!isLoading ? (
+                        Object.keys(news).map(portal => <NewsSection section={portal} items={news[portal]} onHandleShowNews={showNews} />)
+
                     ) : (
                             <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt", color: "black", marginLeft: "45%", marginTop: "40px", marginBottom: "40px" }}></i>
                         )}
@@ -94,3 +95,5 @@ export default function HomePage(props) {
         </div>
     );
 }
+
+export default HomePage;

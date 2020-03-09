@@ -1,30 +1,29 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
+import { authReducer } from './reducers';
+import axios from 'axios';
+
+
 const Context = React.createContext();
 
 
 const ContextProvider = ({ children }) => {
-    const [auth, setAuth] = useState({ username: localStorage["user"], token: localStorage["token"] });
+    const [auth, dispatch] = useReducer(authReducer, { username: localStorage["user"], token: localStorage["token"] });
 
-    const login = (username, token) => {
-        localStorage["token"] = response.data.token;
-        localStorage["user"] = response.data.user.username;
-        setAuth({
-            username: username,
-            token: token
-        })
+    const [portals, setPortals] = useState([]);
+
+
+    const login = (username, token) => dispatch({ type: 'login', auth: { username, token } });
+
+    const logout = () => dispatch({ type: 'logout' });
+
+    const loadPortal = () => {
+        axios.get("https://newsletter-plus.herokuapp.com/api/portal/", response => setPortals(response.data.map(item => item.name)));
     };
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setAuth({
-            username: null,
-            token: null
-        });
-    };
+    loadPortal();
 
     return (
-        <Context.Provider value={{ ...auth, login, logout }}>
+        <Context.Provider value={{ ...auth, portals, login, logout }}>
             {children}
         </Context.Provider>
     )

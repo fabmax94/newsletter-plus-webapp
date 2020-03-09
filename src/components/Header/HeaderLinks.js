@@ -26,7 +26,7 @@ const useStyles = makeStyles(styles);
 export default function HeaderLinks(props) {
   const classes = useStyles();
 
-  const { username, logout } = React.useContext(Context);
+  const { username, logout, portals } = React.useContext(Context);
 
   return (
     <List className={classes.list}>
@@ -39,7 +39,7 @@ export default function HeaderLinks(props) {
             color: "transparent"
           }}
           buttonIcon={ListAlt}
-          dropdownList={props.portals.map(portal =>
+          dropdownList={portals.map(portal =>
             <Link to={`/portal/${portal}`} className={classes.dropdownLink}>
               {portal}
             </Link>

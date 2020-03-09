@@ -24,12 +24,13 @@ import image from "assets/img/bg7.jpg";
 
 import axios from 'axios';
 
-import {Context} from 'context.js';
+import { Context } from 'context.js';
 
 const useStyles = makeStyles(styles);
 
-export default function RegisterPage(props) {
+const LoginPage = (props) => {
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
+  const { login } = React.useContext(Context);
   const [username, setUsername] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [password, setPassword] = React.useState("");
@@ -44,8 +45,6 @@ export default function RegisterPage(props) {
       "username": username,
       "password": password
     };
-
-    const { login } = React.useContext(Context);
 
     axios.post("https://newsletter-plus.herokuapp.com/auth/login", data).then(response => {
       login(response.data.username, response.date.token);
@@ -135,3 +134,5 @@ export default function RegisterPage(props) {
     </div>
   );
 }
+
+export default LoginPage;
