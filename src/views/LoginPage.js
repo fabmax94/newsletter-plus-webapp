@@ -51,7 +51,7 @@ const LoginPage = (props) => {
       window.location.replace("/");
     }).catch(error => {
       setIsLoading(false);
-      alert(error.response.data.username);
+      alert("Usuário ou senha inválido.");
     });
   };
 
@@ -81,7 +81,7 @@ const LoginPage = (props) => {
                   </CardHeader>
                   <CardBody>
                     <CustomInput
-                      labelText="Username..."
+                      labelText="Usuário..."
                       id="username"
                       formControlProps={{
                         fullWidth: true
@@ -97,7 +97,7 @@ const LoginPage = (props) => {
                       }}
                     />
                     <CustomInput
-                      labelText="Password"
+                      labelText="Senha"
                       id="password"
                       formControlProps={{
                         fullWidth: true

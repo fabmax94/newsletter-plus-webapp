@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { get, post } from '../services';
 
 // nodejs library that concatenates classes
 import classNames from "classnames";
@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { makeStyles } from "@material-ui/core/styles";
 
 
-import { Star } from "@material-ui/icons";
+import { Star, StarBorder } from "@material-ui/icons";
 // @material-ui/icons
 
 // core components
@@ -21,42 +21,46 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
+import { Context } from '../context';
+
 
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
-export default function NewsPage(props) {
+const NewsPage = (props) => {
     const classes = useStyles();
     const { ...rest } = props;
-    const { id } = props.match.params;
+    const { id, portal } = props.match.params;
+    const [portalName, setPortalName] = useState(portal);
+    const [isBookmark, setIsBookmark] = useState(false);
+    const { token } = React.useContext(Context);
+    const [url, setUrl] = useState('');
 
 
     useEffect(() => {
-        if (!localStorage["token"]) {
-            props.history.push(`/login`);
-            return;
-        }
-        axios.get(`https://newsletter-plus.herokuapp.com/api/news/get?id=${id}`).then((response => {
-            document.getElementById("news-container").innerHTML = response.data[0].content;
-        }));
-
+        get(`/api/news/${id}`, response => {
+            document.getElementById("news-container").innerHTML = response.data.content;
+            setUrl(response.data.url);
+            setPortalName(response.data.portal_name);
+            setIsBookmark(response.data.is_bookmark);
+        });
     }, []);
 
     const onMarkBookmark = () => {
         let headers = {
-            Authorization: `Token ${localStorage['token']}`
+            Authorization: `Token ${token}`
         };
 
         let data = {
             news_id: parseInt(id)
         };
 
-        axios.post(`https://newsletter-plus.herokuapp.com/api/bookmark/save/`, data, {
+        post(`/api/bookmark/`, data, {
             headers: headers
-        }).then((response => {
+        }, response => {
 
-        }));
+        });
     };
 
     return (
@@ -68,7 +72,7 @@ export default function NewsPage(props) {
                 rightLinks={<HeaderLinks portals={["Medium"]} />}
                 fixed
                 changeColorOnScroll={{
-                    height: 400,
+                    height: 300,
                     color: "white"
                 }}
                 {...rest}
@@ -77,13 +81,18 @@ export default function NewsPage(props) {
                 <div className={classes.container}>
                     <GridContainer>
                         <GridItem xs={12} sm={12} md={6}>
-                            <h1 className={classes.title}>Medium</h1>
+                            <h1 className={classes.title}>{url ? <a className="news-link" target="#" href={url}>{portalName}</a> : portalName}</h1>
                         </GridItem>
                     </GridContainer>
                 </div>
             </Parallax>
             <div className={classNames(classes.main, classes.mainRaised)}>
-                <Button onClick={onMarkBookmark} justIcon color="transparent" style={{ float: "right" }}><Star /></Button>
+                {token ?
+                    <Button onClick={onMarkBookmark} justIcon color="transparent" style={{ float: "right" }}>
+                        {isBookmark ? <Star /> : <StarBorder />}
+                    </Button>
+                    : null}
+
                 <div className={classes.container} id={"news-container"} style={{ paddingTop: "20px", paddingBottom: "20px" }}>
                     <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt", color: "black", marginLeft: "45%" }}></i>
                 </div>
@@ -91,4 +100,6 @@ export default function NewsPage(props) {
             <Footer />
         </div>
     );
-}
+};
+
+export default NewsPage;

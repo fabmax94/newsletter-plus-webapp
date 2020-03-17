@@ -24,6 +24,7 @@ const NewsSection = ({ section, items, onHandleShowNews }) => {
         classes.imgRoundedCircle,
         classes.imgFluid
     );
+
     return (
         <div className={classes.section}>
             <h2 className={classes.title}>{section}</h2>
@@ -31,7 +32,7 @@ const NewsSection = ({ section, items, onHandleShowNews }) => {
                 <GridContainer>
                     {items.map(item => {
                         return (<GridItem xs={12} sm={12} md={4}>
-                            <Card plain onClick={() => onHandleShowNews(item.id)} style={{ "cursor": "pointer" }}>
+                            <Card plain onClick={() => onHandleShowNews(item.id, item.portal_name)} style={{ "cursor": "pointer" }}>
                                 <GridItem xs={12} sm={12} md={6} className={classes.itemGrid}>
                                     {
                                         item.image ? <img src={item.image} alt="..." className={imageClasses} /> :

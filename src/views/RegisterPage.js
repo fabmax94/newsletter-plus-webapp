@@ -24,7 +24,6 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 import image from "assets/img/bg7.jpg";
 
 import axios from 'axios';
-import { Report } from "@material-ui/icons";
 
 const useStyles = makeStyles(styles);
 
@@ -73,11 +72,11 @@ export default function RegisterPage(props) {
               <Card className={classes[cardAnimaton]}>
                 <form className={classes.form}>
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>Register</h4>
+                    <h4>Cadastro</h4>
                   </CardHeader>
                   <CardBody>
                     <CustomInput
-                      labelText="Username..."
+                      labelText="Usuário..."
                       id="username"
                       formControlProps={{
                         fullWidth: true
@@ -109,7 +108,7 @@ export default function RegisterPage(props) {
                       }}
                     />
                     <CustomInput
-                      labelText="Password"
+                      labelText="Senha"
                       id="password"
                       formControlProps={{
                         fullWidth: true

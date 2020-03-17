@@ -20,7 +20,7 @@ ReactDOM.render(
   <ContextProvider>
     <Router history={hist}>
       <Switch>
-        <Route path="/news/:id" component={NewsPage} />
+        <Route path="/news/:portal/:id" component={NewsPage} />
         <Route path="/bookmark" component={BookmarkPage} />
         <Route path="/login" component={LoginPage} />
         <Route path="/register" component={RegisterPage} />

@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
-import axios from 'axios';
+import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -30,28 +29,11 @@ const useStyles = makeStyles(styles);
 
 const HomePage = (props) => {
     const classes = useStyles();
-    const [news, setNews] = useState({});
-    const [isLoading, setIsLoading] = React.useState(true);
-    const { portals } = React.useContext(Context);
+    const { lastNews, isLoadingLastNews } = React.useContext(Context);
     const { ...rest } = props;
 
-    const showNews = (id) => {
-        if (!localStorage["token"]) {
-            props.history.push(`/login`);
-        } else {
-            props.history.push(`/news/${id}`);
-        }
-    };
+    const showNews = (id, portal_name) => props.history.push(`/news/${portal_name}/${id}`);
 
-
-    useEffect(() => {
-        portals.forEach(portal => {
-            axios.get(`https://newsletter-plus.herokuapp.com/api/news?portal=${portal}&last`, response => {
-                setNews({ ...news, portal: response.data });
-                setIsLoading(false);
-            });
-        });
-    }, []);
 
     return (
         <div>
@@ -71,7 +53,7 @@ const HomePage = (props) => {
                 <div className={classes.container}>
                     <GridContainer>
                         <GridItem xs={12} sm={12} md={6}>
-                            <h1 className={classes.title}>Notícias de tecnologia</h1>
+                            <h1 className={classes.title}>Newsletter Plus</h1>
                             <h4>
                                 Um portal que une todos os seus sites de notícia favoritos
                                 em uma única plataforma, totalmente gratuita e open source.
@@ -82,11 +64,11 @@ const HomePage = (props) => {
             </Parallax>
             <div className={classNames(classes.main, classes.mainRaised)}>
                 <div className={classes.container}>
-                    {!isLoading ? (
-                        Object.keys(news).map(portal => <NewsSection section={portal} items={news[portal]} onHandleShowNews={showNews} />)
+                    {isLoadingLastNews && !Object.keys(lastNews).length ? (
+                        <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt", color: "black", marginLeft: "45%", marginTop: "40px", marginBottom: "40px" }}></i>
 
                     ) : (
-                            <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt", color: "black", marginLeft: "45%", marginTop: "40px", marginBottom: "40px" }}></i>
+                            Object.keys(lastNews).map(portal => <NewsSection section={portal} items={lastNews[portal]} onHandleShowNews={showNews} />)
                         )}
 
                 </div>

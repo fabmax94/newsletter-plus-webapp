@@ -23,7 +23,7 @@ import { Context } from 'context.js';
 
 const useStyles = makeStyles(styles);
 
-export default function HeaderLinks(props) {
+const HeaderLinks = () => {
   const classes = useStyles();
 
   const { username, logout, portals } = React.useContext(Context);
@@ -94,4 +94,6 @@ export default function HeaderLinks(props) {
       </ListItem>
     </List>
   );
-}
+};
+
+export default HeaderLinks;
