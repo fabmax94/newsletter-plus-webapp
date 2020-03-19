@@ -56,10 +56,10 @@ const NewsPage = (props) => {
             news_id: parseInt(id)
         };
 
-        post(`/api/bookmark/`, data, {
-            headers: headers
-        }, response => {
+        post(`/api/bookmark/`, data, response => {
 
+        }, {
+            headers: headers
         });
     };
 

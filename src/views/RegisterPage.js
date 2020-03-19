@@ -22,7 +22,7 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
 import image from "assets/img/bg7.jpg";
 
-import axios from 'axios';
+import { post } from '../services';
 
 const useStyles = makeStyles(styles);
 
@@ -42,11 +42,11 @@ export default function RegisterPage(props) {
       "password": password,
       "email": email
     }
-    axios.post("https://newsletter-plus.herokuapp.com/auth/register", data).then(response => {
+    post("https://newsletter-plus.herokuapp.com/auth/register", data, response => {
       localStorage["token"] = response.data.token;
       localStorage["user"] = response.data.user.username;
       window.location.replace("/");
-    }).catch(error => alert(error.response.data.username));
+    }, error => alert(error.response.data.username));
   };
 
   return (

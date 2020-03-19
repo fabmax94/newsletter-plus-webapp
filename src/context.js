@@ -1,6 +1,7 @@
 import React, { useReducer, useState, useEffect } from 'react';
 import { authReducer } from './reducers';
 import axios from 'axios';
+import { get } from './services';
 
 
 const Context = React.createContext();
@@ -19,10 +20,10 @@ const ContextProvider = ({ children }) => {
 
     const logout = () => dispatch({ type: 'logout' });
 
-    const init = () => axios.get("https://newsletter-plus.herokuapp.com/api/portal/").then(response => {
+    const init = () => get("/api/portal/", response => {
         let portalsList = response.data.map(item => item.name);
         portalsList.forEach(portal => {
-            axios.get(`https://newsletter-plus.herokuapp.com/api/news/?portal=${portal}&last`).then(response => {
+            get(`/api/news/?portal=${portal}&last`, response => {
                 let data = { ...lastNews, [portal]: response.data.news };
                 localStorage["lastNews"] = JSON.stringify(data);
                 setLastNews(data);
@@ -32,7 +33,7 @@ const ContextProvider = ({ children }) => {
         localStorage["portals"] = JSON.stringify(portalsList);
         setPortals(portalsList);
     });
-    
+
 
     useEffect(() => {
         init();
