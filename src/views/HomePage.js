@@ -34,7 +34,7 @@ const HomePage = ({ rest, history }) => {
     const showNews = (id, portal_name) => history.push(`/news/${portal_name}/${id}`);
 
     const loadLastNews = () => {
-        get(`/api/news/?last`, response => {
+        get(`/api/news/?last=true`, response => {
             localStorage["lastNews"] = response.data.news;
             setLastNews(response.data.news);
             setIsLoadingLastNews(false);
