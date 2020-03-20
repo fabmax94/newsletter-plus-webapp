@@ -1,6 +1,5 @@
 import React, { useReducer, useState, useEffect } from 'react';
 import { authReducer } from './reducers';
-import axios from 'axios';
 import { get } from './services';
 
 
@@ -12,8 +11,6 @@ const ContextProvider = ({ children }) => {
 
     const [portals, setPortals] = useState(JSON.parse(localStorage.getItem("portals")) || []);
 
-    const [lastNews, setLastNews] = useState(JSON.parse(localStorage.getItem("lastNews")) || {});
-    const [isLoadingLastNews, setIsLoadingLastNews] = React.useState(true);
 
 
     const login = (username, token) => dispatch({ type: 'login', auth: { username, token } });
@@ -22,14 +19,6 @@ const ContextProvider = ({ children }) => {
 
     const init = () => get("/api/portal/", response => {
         let portalsList = response.data.map(item => item.name);
-        portalsList.forEach(portal => {
-            get(`/api/news/?portal=${portal}&last`, response => {
-                let data = { ...lastNews, [portal]: response.data.news };
-                localStorage["lastNews"] = JSON.stringify(data);
-                setLastNews(data);
-                setIsLoadingLastNews(false);
-            });
-        });
         localStorage["portals"] = JSON.stringify(portalsList);
         setPortals(portalsList);
     });
@@ -41,7 +30,7 @@ const ContextProvider = ({ children }) => {
 
 
     return (
-        <Context.Provider value={{ ...auth, portals, login, logout, lastNews, isLoadingLastNews }}>
+        <Context.Provider value={{ ...auth, portals, login, logout }}>
             {children}
         </Context.Provider>
     )

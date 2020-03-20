@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const HOST = "http://127.0.0.1:8000";
+const HOST = "https://newsletter-plus.herokuapp.com";
 
 const get = (uri, callback) => {
     axios.get(`${HOST}${uri}`).then(callback);

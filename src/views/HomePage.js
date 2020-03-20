@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -19,20 +19,32 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import NewsSection from "../sections/NewsSection";
 
-
-import { Context } from "../context";
+import { get } from '../services';
 
 
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
-const HomePage = (props) => {
+const HomePage = ({ rest, history }) => {
     const classes = useStyles();
-    const { lastNews, isLoadingLastNews } = React.useContext(Context);
-    const { ...rest } = props;
+    const [lastNews, setLastNews] = useState(JSON.parse(localStorage.getItem("lastNews")) || []);
+    const [isLoadingLastNews, setIsLoadingLastNews] = useState(true);
 
-    const showNews = (id, portal_name) => props.history.push(`/news/${portal_name}/${id}`);
+    const showNews = (id, portal_name) => history.push(`/news/${portal_name}/${id}`);
+
+    const loadLastNews = () => {
+        get(`/api/news/?last`, response => {
+            localStorage["lastNews"] = response.data.news;
+            setLastNews(response.data.news);
+            setIsLoadingLastNews(false);
+        });
+    };
+
+    useEffect(() => {
+        loadLastNews();
+    }, []);
+
 
 
     return (
@@ -64,11 +76,11 @@ const HomePage = (props) => {
             </Parallax>
             <div className={classNames(classes.main, classes.mainRaised)}>
                 <div className={classes.container}>
-                    {isLoadingLastNews && !Object.keys(lastNews).length ? (
+                    {isLoadingLastNews && !lastNews.length ? (
                         <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt", color: "black", marginLeft: "45%", marginTop: "40px", marginBottom: "40px" }}></i>
 
                     ) : (
-                            Object.keys(lastNews).map(portal => <NewsSection section={portal} items={lastNews[portal]} onHandleShowNews={showNews} />)
+                            <NewsSection section={"Last News"} items={lastNews} onHandleShowNews={showNews} />
                         )}
 
                 </div>
