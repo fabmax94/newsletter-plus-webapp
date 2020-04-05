@@ -19,33 +19,31 @@ import Parallax from "components/Parallax/Parallax.js";
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
 
-import NewsSection from '../sections/NewsSection.js';
+import NewsSection from '../sections/NewsSection';
 
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
-const BookmarkPage = ({ rest, history }) => {
+const PortalPage = ({ rest, history, match }) => {
     const classes = useStyles();
-    const [bookmarks, setBookmarks] = useState([]);
+    const [news, setNews] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const { portal } = match.params;
 
 
-    const loadBookmarks = () => {
-        let headers = {
-            Authorization: `Token ${localStorage['token']}`
-        }
-        get('/api/bookmark', response => {
-            setBookmarks(response.data.bookmarks);
+    const loadNews = () => {
+        get(`/api/news?portal=${portal}`, response => {
+            setNews(response.data.news);
             setIsLoading(true)
-        }, { headers });
+        });
     };
 
     const showNews = (id, portal_name) => history.push(`/news/${portal_name}/${id}`);
 
 
     useEffect(() => {
-        loadBookmarks();
+        loadNews();
     }, []);
 
     return (
@@ -54,7 +52,7 @@ const BookmarkPage = ({ rest, history }) => {
                 color="transparent"
                 routes={dashboardRoutes}
                 brand="Newsletter Plus"
-                rightLinks={<HeaderLinks portals={["Medium"]} />}
+                rightLinks={<HeaderLinks />}
                 fixed
                 changeColorOnScroll={{
                     height: 400,
@@ -66,18 +64,18 @@ const BookmarkPage = ({ rest, history }) => {
                 <div className={classes.container}>
                     <GridContainer>
                         <GridItem xs={12} sm={12} md={6}>
-                            <h1 className={classes.title}>Favoritos</h1>
+                            <h1 className={classes.title}>{portal}</h1>
                         </GridItem>
                     </GridContainer>
                 </div>
             </Parallax>
             <div className={classNames(classes.main, classes.mainRaised)}>
                 <div className={classes.container}>
-                    {isLoading && !bookmarks.length ? (
+                    {isLoading && !news.length ? (
                         <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ fontSize: "45pt", color: "black", marginLeft: "45%", marginTop: "40px", marginBottom: "40px" }}></i>
 
                     ) : (
-                            <NewsSection section={""} items={bookmarks} onHandleShowNews={showNews} />
+                            <NewsSection section={""} items={news} onHandleShowNews={showNews} />
                         )}
 
                 </div>
@@ -87,4 +85,4 @@ const BookmarkPage = ({ rest, history }) => {
     );
 }
 
-export default BookmarkPage;
+export default PortalPage;

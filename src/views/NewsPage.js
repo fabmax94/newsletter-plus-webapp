@@ -28,10 +28,9 @@ const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
-const NewsPage = (props) => {
+const NewsPage = ({ rest, match }) => {
     const classes = useStyles();
-    const { ...rest } = props;
-    const { id, portal } = props.match.params;
+    const { id, portal } = match.params;
     const [portalName, setPortalName] = useState(portal);
     const [isBookmark, setIsBookmark] = useState(false);
     const [isLoading, setIsLoading] = useState(true);

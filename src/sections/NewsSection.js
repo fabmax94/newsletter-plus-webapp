@@ -27,7 +27,8 @@ const NewsSection = ({ section, items, onHandleShowNews }) => {
 
     return (
         <div className={classes.section}>
-            <h2 className={classes.title}>{section}</h2>
+            {section ? (<h2 className={classes.title}>{section}</h2>) : null}
+
             <div>
                 <GridContainer>
                     {items.map(item => {
