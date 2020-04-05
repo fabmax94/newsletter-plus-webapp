@@ -22,31 +22,40 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
 import image from "assets/img/bg7.jpg";
 
-import { post } from '../services';
+import { post } from 'services';
+
+import { Context } from 'context';
 
 const useStyles = makeStyles(styles);
 
 export default function RegisterPage(props) {
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
+  const { login } = React.useContext(Context);
+
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
   setTimeout(function () {
     setCardAnimation("");
   }, 700);
   const classes = useStyles();
   const { ...rest } = props;
   const onRegister = () => {
+    setIsLoading(true);
     let data = {
       "username": username,
       "password": password,
       "email": email
     }
-    post("https://newsletter-plus.herokuapp.com/auth/register", data, response => {
-      localStorage["token"] = response.data.token;
-      localStorage["user"] = response.data.user.username;
+    post("/auth/register", data, response => {
+      login(response.data.user.username, response.data.token);
       window.location.replace("/");
-    }, error => alert(error.response.data.username));
+    }, {}, error => {
+      alert(error.response.data.username);
+      setIsLoading(false);
+    });
+
   };
 
   return (
@@ -128,7 +137,10 @@ export default function RegisterPage(props) {
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
                     <Button simple color="primary" size="lg" onClick={onRegister}>
-                      Get started
+                      {isLoading ? (
+                        <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ marginRight: "5px" }}></i>
+                      ) : null}
+                      Cadastrar
                     </Button>
                   </CardFooter>
                 </form>

@@ -83,10 +83,10 @@ const HeaderLinks = () => {
           buttonIcon={Person}
           dropdownList={[
             <Link to={`/login`} className={classes.dropdownLink}>
-              Login
+              Entrar
             </Link>,
             <Link to={`/register`} className={classes.dropdownLink}>
-              Register
+              Cadastrar
             </Link>
           ]}
         />)}

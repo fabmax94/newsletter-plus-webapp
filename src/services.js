@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const HOST = "https://newsletter-plus.herokuapp.com";
 
-const get = (uri, callback) => {
-    axios.get(`${HOST}${uri}`).then(callback);
+const get = (uri, callback, config = {}) => {
+    axios.get(`${HOST}${uri}`, config).then(callback);
 };
 
 const post = (uri, data, callback, config = {}, error = null) => {

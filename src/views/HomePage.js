@@ -35,7 +35,7 @@ const HomePage = ({ rest, history }) => {
 
     const loadLastNews = () => {
         get(`/api/news/?last=true`, response => {
-            localStorage["lastNews"] = response.data.news;
+            localStorage["lastNews"] = JSON.stringify(response.data.news);
             setLastNews(response.data.news);
             setIsLoadingLastNews(false);
         });

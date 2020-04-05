@@ -34,17 +34,22 @@ const NewsPage = (props) => {
     const { id, portal } = props.match.params;
     const [portalName, setPortalName] = useState(portal);
     const [isBookmark, setIsBookmark] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const { token } = React.useContext(Context);
     const [url, setUrl] = useState('');
 
 
     useEffect(() => {
+        let headers = {
+            Authorization: `Token ${token}`
+        };
         get(`/api/news/${id}`, response => {
             document.getElementById("news-container").innerHTML = response.data.content;
             setUrl(response.data.url);
             setPortalName(response.data.portal_name);
             setIsBookmark(response.data.is_bookmark);
-        });
+            setIsLoading(false);
+        }, { headers });
     }, []);
 
     const onMarkBookmark = () => {
@@ -55,6 +60,8 @@ const NewsPage = (props) => {
         let data = {
             news_id: parseInt(id)
         };
+
+        setIsBookmark(!isBookmark);
 
         post(`/api/bookmark/`, data, response => {
 
@@ -87,7 +94,7 @@ const NewsPage = (props) => {
                 </div>
             </Parallax>
             <div className={classNames(classes.main, classes.mainRaised)}>
-                {token ?
+                {token && !isLoading ?
                     <Button onClick={onMarkBookmark} justIcon color="transparent" style={{ float: "right" }}>
                         {isBookmark ? <Star /> : <StarBorder />}
                     </Button>

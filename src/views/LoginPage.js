@@ -21,9 +21,9 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
 import image from "assets/img/bg7.jpg";
 
-import axios from 'axios';
+import {post} from 'services';
 
-import { Context } from 'context.js';
+import { Context } from 'context';
 
 const useStyles = makeStyles(styles);
 
@@ -45,10 +45,11 @@ const LoginPage = (props) => {
       "password": password
     };
 
-    axios.post("https://newsletter-plus.herokuapp.com/auth/login", data).then(response => {
-      login(response.data.username, response.date.token);
+    post("/auth/login", data, response => {
+      login(response.data.user.username, response.data.token);
       window.location.replace("/");
-    }).catch(error => {
+    }, {}, error => {
+      console.error(error.response.data.username);
       setIsLoading(false);
       alert("Usuário ou senha inválido.");
     });
@@ -120,7 +121,7 @@ const LoginPage = (props) => {
                       {isLoading ? (
                         <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ marginRight: "5px" }}></i>
                       ) : null}
-                      LogIn
+                      Entrar
                     </Button>
                   </CardFooter>
                 </form>
