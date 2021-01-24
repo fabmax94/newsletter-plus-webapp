@@ -20,7 +20,7 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 
 import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
-import image from "assets/img/bg7.jpg";
+import image from "assets/img/sign.jpg";
 
 import { post } from 'services';
 
@@ -80,11 +80,11 @@ export default function RegisterPage(props) {
               <Card className={classes[cardAnimaton]}>
                 <form className={classes.form}>
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>Cadastro</h4>
+                    <h4>Register</h4>
                   </CardHeader>
                   <CardBody>
                     <CustomInput
-                      labelText="Usuário..."
+                      labelText="User..."
                       id="username"
                       formControlProps={{
                         fullWidth: true
@@ -116,7 +116,7 @@ export default function RegisterPage(props) {
                       }}
                     />
                     <CustomInput
-                      labelText="Senha"
+                      labelText="Password"
                       id="password"
                       formControlProps={{
                         fullWidth: true
@@ -140,7 +140,7 @@ export default function RegisterPage(props) {
                       {isLoading ? (
                         <i className="fa fa-spinner fa-spin" aria-hidden="true" style={{ marginRight: "5px" }}></i>
                       ) : null}
-                      Cadastrar
+                      Register
                     </Button>
                   </CardFooter>
                 </form>
