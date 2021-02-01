@@ -28,7 +28,7 @@ const HeaderLinks = () => {
                   color="transparent"
                   className={classes.navLink}
               >
-                <Star className={classes.icons}/> Favoritos
+                <Star className={classes.icons}/> Bookmarks
               </Button>
             </ListItem>
         ) : null}

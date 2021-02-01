@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import {makeStyles} from '@material-ui/core/styles';
 import GridContainer from 'components/Grid/GridContainer.js';
 import GridItem from 'components/Grid/GridItem.js';
@@ -11,7 +10,7 @@ import styles
 
 const useStyles = makeStyles(styles);
 
-const NewsSection = ({section, items, onHandleShowNews}) => {
+const SectionNews = ({section, items, onHandleShowNews}) => {
   const classes = useStyles();
 
   return (
@@ -22,8 +21,13 @@ const NewsSection = ({section, items, onHandleShowNews}) => {
           <GridContainer>
             {items.map(item => {
               return (
-                  <GridItem xs={12} sm={6}  md={4} key={item.id}>
-                    <Card style={{width: '20rem', cursor: 'pointer', marginLeft: 'auto', marginRight: 'auto'}}
+                  <GridItem xs={12} sm={6} md={4} key={item.id}>
+                    <Card style={{
+                      width: '20rem',
+                      cursor: 'pointer',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
                           onClick={() => onHandleShowNews(item.id,
                               item.portal_name)}>
                       <img
@@ -55,4 +59,4 @@ const NewsSection = ({section, items, onHandleShowNews}) => {
   );
 };
 
-export default NewsSection;
+export default SectionNews;

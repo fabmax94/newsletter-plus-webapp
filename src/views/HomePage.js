@@ -8,9 +8,9 @@ import GridItem from 'components/Grid/GridItem.js';
 import HeaderLinks from 'components/Header/HeaderLinks.js';
 import Parallax from 'components/Parallax/Parallax.js';
 import styles from 'assets/jss/material-kit-react/views/landingPage.js';
-import NewsSection from '../sections/NewsSection';
+import SectionNews from '../components/Section/SectionNews';
 import ls from 'local-storage';
-import ContentLoader, {Facebook} from 'react-content-loader';
+import ContentLoader from 'react-content-loader';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import {get} from '../services';
@@ -23,24 +23,78 @@ const HomePage = ({rest, history}) => {
   const classes = useStyles();
   const Loader = () => (
       <ContentLoader viewBox="0 0 380 200">
-        <rect x="40" y="30" rx="100" ry="100" width="40" height="40"/>
-        <rect x="40" y="80" rx="3" ry="3" width="60" height="5"/>
-        <rect x="40" y="90" rx="3" ry="3" width="40" height="5"/>
-        <rect x="170" y="30" rx="100" ry="100" width="40" height="40"/>
-        <rect x="170" y="80" rx="3" ry="3" width="60" height="5"/>
-        <rect x="170" y="90" rx="3" ry="3" width="40" height="5"/>
-        <rect x="300" y="30" rx="100" ry="100" width="40" height="40"/>
-        <rect x="300" y="80" rx="3" ry="3" width="60" height="5"/>
-        <rect x="300" y="90" rx="3" ry="3" width="40" height="5"/>
+        <rect x="40" y="30" width="40" height="40"/>
+        <rect x="40" y="80" width="60" height="5"/>
+        <rect x="40" y="90" width="40" height="5"/>
+        <rect x="170" y="30" width="40" height="40"/>
+        <rect x="170" y="80" width="60" height="5"/>
+        <rect x="170" y="90" width="40" height="5"/>
+        <rect x="300" y="30" width="40" height="40"/>
+        <rect x="300" y="80" width="60" height="5"/>
+        <rect x="300" y="90" width="40" height="5"/>
 
-        <rect x="40" y="120" rx="100" ry="100" width="40" height="40"/>
-        <rect x="40" y="170" rx="3" ry="3" width="60" height="5"/>
-        <rect x="40" y="180" rx="3" ry="3" width="40" height="5"/>
-        <rect x="170" y="120" rx="100" ry="100" width="40" height="40"/>
-        <rect x="170" y="170" rx="3" ry="3" width="60" height="5"/>
-        <rect x="170" y="180" rx="3" ry="3" width="40" height="5"/>
+        <rect x="40" y="120" width="40" height="40"/>
+        <rect x="40" y="170" width="60" height="5"/>
+        <rect x="40" y="180" width="40" height="5"/>
+        <rect x="170" y="120" width="40" height="40"/>
+        <rect x="170" y="170" width="60" height="5"/>
+        <rect x="170" y="180" width="40" height="5"/>
       </ContentLoader>
   );
+
+  const TopContent = () => (
+      <>
+        <Header
+            color="transparent"
+            routes={dashboardRoutes}
+            brand="Newsletter Plus"
+            rightLinks={<HeaderLinks portals={['Medium']}/>}
+            fixed
+            changeColorOnScroll={{
+              height: 400,
+              color: 'white',
+            }}
+            {...rest}
+        />
+        <Parallax filter image={require('assets/img/bg7.jpg')}>
+          <div className={classes.container}>
+            <GridContainer>
+              <GridItem xs={12} sm={12} md={6}>
+                <h1 className={classes.title}>Newsletter Plus</h1>
+                <h4>
+                  A portal that brings together all your favorite news sites on
+                  a single platform, completely free and open source.
+                </h4>
+              </GridItem>
+            </GridContainer>
+          </div>
+        </Parallax>
+      </>
+  );
+
+  const MainContent = () => (
+      <div className={classNames(classes.main, classes.mainRaised)}>
+        <div className={classes.container}>
+          {isLoadingLastNews && !lastNews.length ? (
+              Loader()
+
+          ) : (
+              <InfiniteScroll
+                  pageStart={0}
+                  loadMore={loadMore}
+                  hasMore={true}
+                  loader={Loader()}
+              >
+                <SectionNews section={'Last News'} items={lastNews}
+                             onHandleShowNews={showNews}/>
+              </InfiniteScroll>
+
+          )}
+
+        </div>
+      </div>
+  );
+
   const [lastNews, setLastNews] = useState(
       JSON.parse(ls.get('lastNews')) || []);
 
@@ -75,51 +129,8 @@ const HomePage = ({rest, history}) => {
 
   return (
       <div>
-        <Header
-            color="transparent"
-            routes={dashboardRoutes}
-            brand="Newsletter Plus"
-            rightLinks={<HeaderLinks portals={['Medium']}/>}
-            fixed
-            changeColorOnScroll={{
-              height: 400,
-              color: 'white',
-            }}
-            {...rest}
-        />
-        <Parallax filter image={require('assets/img/bg7.jpg')}>
-          <div className={classes.container}>
-            <GridContainer>
-              <GridItem xs={12} sm={12} md={6}>
-                <h1 className={classes.title}>Newsletter Plus</h1>
-                <h4>
-                  A portal that brings together all your favorite news sites on
-                  a single platform, completely free and open source.
-                </h4>
-              </GridItem>
-            </GridContainer>
-          </div>
-        </Parallax>
-        <div className={classNames(classes.main, classes.mainRaised)}>
-          <div className={classes.container}>
-            {isLoadingLastNews && !lastNews.length ? (
-                Loader()
-
-            ) : (
-                <InfiniteScroll
-                    pageStart={0}
-                    loadMore={loadMore}
-                    hasMore={true}
-                    loader={Loader()}
-                >
-                  <NewsSection section={'Last News'} items={lastNews}
-                               onHandleShowNews={showNews}/>
-                </InfiniteScroll>
-
-            )}
-
-          </div>
-        </div>
+        {TopContent()}
+        {MainContent()}
         <Footer/>
       </div>
   );
